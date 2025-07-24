@@ -2,11 +2,11 @@
   <header class="header">
     <div class="container">
       <div class="header-content">
-        <a href="{% url 'library:index' %}" class="logo">📖 Бібліотека</a>
+        <a href="{% url 'library:index_page_view' %}" class="logo">📖 Бібліотека</a>
         <nav class="navigation">
           <ul>
-            <li><a href="{% url 'library:index' %}" class="active">Головна</a></li>
-            <li><a href="{% url 'library:catalog' %}">Каталог</a></li>
+            <li><a href="{% url 'library:index_page_view' %}" class="active">Головна</a></li>
+            <li><a href="{% url 'library:catalog_page_view' %}">Каталог</a></li>
             {#                        <li><a href="about.html">Про нас</a></li>#}
             {#                        <li><a href="contact.html">Контакти</a></li>#}
           </ul>

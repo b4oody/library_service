@@ -5,23 +5,21 @@
   <main>
     <div class="container">
       <div class="book-details-layout">
-        <!-- Обкладинка -->
         <div class="book-cover">
-          <img src="{{ book.cover_image_url.url }}" alt="Обкладинка книги Дюна">
+          <img src="{{ book_pk.cover_image_url.url }}" alt="Обкладинка книги Дюна">
         </div>
-        <!-- Інформація про книгу -->
         <div class="book-info">
-          <h1>{{ book.title }}</h1>
-          <p class="author">{{ book.author.all|join:", " }}</p>
+          <h1>{{ book_pk.title }}</h1>
+          <p class="author">{{ book_pk.author.all|join:", " }}</p>
 
           <div class="book-meta">
-            <p><strong>Жанр:</strong>{{ book.genres.all|join:", " }}</p>
-            <p><strong>Рік видання:</strong>{{ book.publication_year }}</p>
+            <p><strong>Жанр:</strong>{{ book_pk.genres.all|join:", " }}</p>
+            <p><strong>Рік видання:</strong>{{ book_pk.publication_year }}</p>
             <p><strong>Статус:</strong> <span class="book-status available">????</span></p>
           </div>
 
           <h4>Анотація</h4>
-          <p>{{ book.description }}</p>
+          <p>{{ book_pk.description }}</p>
 
           <div class="book-actions">
             <button class="btn">Забронювати книгу</button>
