@@ -2,6 +2,9 @@ from django.contrib.auth import login
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views import generic
+from django.views.generic import CreateView
 
 from library.form import RegistrationForm, BookFilterForm
 from library.models import Book
@@ -69,3 +72,29 @@ def book_page_view(request: HttpRequest, pk: int) -> HttpResponse:
         "catalog/book-page.html",
         context=context
     )
+
+
+class BookCreateAdminView(generic.CreateView):
+    model = Book
+    template_name = "catalog/create_update_form.html"
+    fields = "__all__"
+    success_url = reverse_lazy("library:catalog_page_view")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["create_update_form"] = context.pop("form")
+        return context
+
+
+class BookUpdateAdminView(generic.UpdateView):
+    model = Book
+    template_name = "catalog/create_update_form.html"
+    fields = "__all__"
+    success_url = reverse_lazy("library:catalog_page_view")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["create_update_form"] = context.pop("form")
+        return context
+
+

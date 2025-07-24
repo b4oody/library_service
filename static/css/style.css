@@ -410,12 +410,31 @@ main {
 
 .auth-container input[type="email"],
 .auth-container input[type="password"],
-.auth-container input[type="text"] {
+.auth-container input[type="file"],
+.auth-container input[type="number"],
+.auth-container input[type="textarea "],
+.auth-container input[type="text"],
+.auth-container input[type="decimal "] {
     width: calc(100% - 24px); /* Account for padding */
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
+}
+
+.auth-container select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+
 }
 
 .auth-container .btn {
