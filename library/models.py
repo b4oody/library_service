@@ -79,6 +79,9 @@ class Book(models.Model):
         authors_list = [author.full_name() for author in self.author.all()]
         return f"{self.title}: ({', '.join(authors_list)})"
 
+    def is_stock(self):
+        return self.quantity > 0
+
 
 class Reservation(models.Model):
     user = models.ForeignKey(
