@@ -1,3 +1,6 @@
+import os
+import uuid
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -45,6 +48,12 @@ class Genre(models.Model):
     def __str__(self):
         return self.genre_name
 
+def upload_to_uuid(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    folder = "photos/"
+
+    return os.path.join(folder, filename)
 
 class Book(models.Model):
     title = models.CharField(max_length=255)
@@ -57,7 +66,11 @@ class Book(models.Model):
     description = models.TextField()
     quantity = models.PositiveIntegerField(default=1,)
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    cover_image_url = models.ImageField(blank=True, null=True)
+    cover_image_url = models.ImageField(
+        upload_to=upload_to_uuid,
+        blank=True,
+        null=True
+    )
 
     class Meta:
         ordering = ["title"]
