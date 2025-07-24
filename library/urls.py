@@ -8,6 +8,7 @@ from library.views import (
     book_page_view,
     BookCreateAdminView,
     BookUpdateAdminView,
+    BookDeleteAdminView,
 )
 
 urlpatterns = [
@@ -19,6 +20,7 @@ urlpatterns = [
     path("book_page/<int:pk>/", book_page_view, name="book_page_view"),
     path("book_create/", BookCreateAdminView.as_view(), name="book_create_view"),
     path("book_update/<int:pk>/", BookUpdateAdminView.as_view(), name="book_update_view"),
+    path("book_delete/<int:pk>/", BookDeleteAdminView.as_view(), name="book_delete_view"),
 
 ]
 

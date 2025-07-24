@@ -4,7 +4,6 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from django.views.generic import CreateView
 
 from library.form import RegistrationForm, BookFilterForm
 from library.models import Book
@@ -98,3 +97,7 @@ class BookUpdateAdminView(generic.UpdateView):
         return context
 
 
+class BookDeleteAdminView(generic.DeleteView):
+    model = Book
+    template_name = "catalog/delete_book_form.html"
+    success_url = reverse_lazy("library:catalog_page_view")

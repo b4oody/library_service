@@ -3,17 +3,17 @@
   <main>
     <div class="page-header">
       <div class="container">
-        <h1>{{ object|yesno:"Update,Create" }}</h1>
+        <h1>Delete Book</h1>
       </div>
     </div>
 
     <div class="container">
       <div class="auth-container">
-        <h1>{{ object|yesno:"Update,Create" }}</h1>
-        <form action="#" method="post" enctype="multipart/form-data">
+        <h1>Delete Book</h1>
+        <form action="#" method="post">
           {% csrf_token %}
-          {{ create_update_form }}
-          <button type="submit" class="btn">{{ object|yesno:"Update,Create" }}</button>
+          {{ delete_form }}
+          <button type="submit" class="btn">Delete</button>
         </form>
       </div>
     </div>
