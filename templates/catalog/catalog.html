@@ -1,0 +1,62 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+
+{% block content %}
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <h1>Каталог книг</h1>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="catalog-layout">
+        <aside class="filters">
+          <h3>Фільтри</h3>
+          <div class="filter-group">
+            <label for="search">Пошук за назвою</label>
+            <input type="text" id="search" placeholder="Введіть назву...">
+          </div>
+          <div class="filter-group">
+            <label for="genre">Жанр</label>
+            <select id="genre">
+              <option value="">Всі жанри</option>
+              <option value="fantasy">Фантастика</option>
+              <option value="detective">Детектив</option>
+              <option value="classic">Класика</option>
+              <option value="science">Наукова література</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="author">Автор</label>
+            <select id="author">
+              <option value="">Всі автори</option>
+              <option value="orwell">Джордж Орвелл</option>
+              <option value="herbert">Френк Герберт</option>
+              <option value="tolkien">Дж. Р. Р. Толкін</option>
+            </select>
+          </div>
+          <button class="btn">Застосувати</button>
+        </aside>
+
+        <div class="catalog-books">
+          <div class="books-grid">
+            {% for book in books %}
+              <div class="book-card">
+                <img src="{{ book.cover_image_url.url }}" alt="Обкладинка книги">
+                <h3>{{ book.title }}</h3>
+                <p>{{ book.author.all|join:", " }}</p>
+                <a href="{% url 'library:book_page' book.pk %}" class="btn-secondary">Детальніше</a>
+                {% if user.is_authenticated and user.is_superuser %}
+                  <a href="{% url 'library:book_page' book.pk %}" class="btn-secondary">Редагувати</a>
+                  <a href="{% url 'library:book_page' book.pk %}" class="btn-secondary">Видалити</a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}

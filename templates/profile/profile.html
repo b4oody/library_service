@@ -1,0 +1,95 @@
+{% extends 'base/base.html' %}
+
+
+{% block title %}
+  <title>Профіль користувача — Бібліотека</title>
+{% endblock %}
+
+{% block content %}
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <h1>Мій профіль</h1>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="profile-layout">
+        <aside class="profile-sidebar">
+          <h3>Навігація</h3>
+          <nav class="profile-nav">
+            <ul>
+              <li><a href="#userInfo" class="active">Мої дані</a></li>
+              <li><a href="#reservedBooks">Заброньовані книги</a></li>
+              <li><a href="#purchasedBooks">Придбані книги</a></li>
+              <li><a href="#likedBooks">Улюблені книги</a></li>
+            </ul>
+          </nav>
+        </aside>
+
+        <div class="profile-content">
+          <section id="userInfo" class="profile-section">
+            <h2>Мої дані</h2>
+            <div class="user-info">
+              <p><strong>Ім'я:</strong> Іван Петров</p>
+              <p><strong>Email:</strong> ivan.petrov@example.com</p>
+              <p><strong>Дата реєстрації:</strong> 01.01.2023</p>
+              <button class="btn-secondary">Редагувати профіль</button>
+            </div>
+          </section>
+
+          <section id="reservedBooks" class="profile-section" style="display: none;">
+            <h2>Заброньовані книги</h2>
+            <div class="book-list">
+              <div class="book-item">
+                <img src="https://placehold.co/100x150/f0f0f0/000?text=Книга+1" alt="Обкладинка книги">
+                <h4>Дюна</h4>
+                <p>Френк Герберт</p>
+                <span class="status reserved">Заброньовано</span>
+              </div>
+              <div class="book-item">
+                <img src="https://placehold.co/100x150/f0f0f0/000?text=Книга+2" alt="Обкладинка книги">
+                <h4>1984</h4>
+                <p>Джордж Орвелл</p>
+                <span class="status reserved">Заброньовано</span>
+              </div>
+            </div>
+            <p style="margin-top: 20px;">Тут будуть відображатися книги, які ви зарезервували.</p>
+          </section>
+
+          <section id="purchasedBooks" class="profile-section" style="display: none;">
+            <h2>Придбані книги</h2>
+            <div class="book-list">
+              <div class="book-item">
+                <img src="https://placehold.co/100x150/d1d1d1/000?text=Книга+3" alt="Обкладинка книги">
+                <h4>Майстер і Маргарита</h4>
+                <p>Михайло Булгаков</p>
+                <span class="status purchased">Придбано</span>
+              </div>
+              <div class="book-item">
+                <img src="https://placehold.co/100x150/d1d1d1/000?text=Книга+4" alt="Обкладинка книги">
+                <h4>Алхімік</h4>
+                <p>Пауло Коельйо</p>
+                <span class="status purchased">Придбано</span>
+              </div>
+            </div>
+            <p style="margin-top: 20px;">Тут будуть відображатися книги, які ви придбали.</p>
+          </section>
+
+          <section id="likedBooks" class="profile-section" style="display: none;">
+            <h2>Улюблені книги</h2>
+            <div class="book-list">
+              <div class="book-item">
+                <img src="https://placehold.co/100x150/e8e8e8/000?text=Книга+5" alt="Обкладинка книги">
+                <h4>Володар перснів</h4>
+                <p>Дж. Р. Р. Толкін</p>
+                <span class="status liked">Улюблена</span>
+              </div>
+            </div>
+            <p style="margin-top: 20px;">Тут будуть відображатися книги, які ви додали до улюблених.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}
