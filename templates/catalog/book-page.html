@@ -15,12 +15,31 @@
           <div class="book-meta">
             <p><strong>Жанр:</strong>{{ book_pk.genres.all|join:", " }}</p>
             <p><strong>Рік видання:</strong>{{ book_pk.publication_year }}</p>
-            <p><strong>Статус:</strong> <span class="book-status available">????</span></p>
+            {% if book_pk.is_stock %}
+              <p><strong>Status:</strong> <span class="book-status available">In stock</span></p>
+            {% else %}
+              <p><strong>Status:</strong> <span class="book-status unavailable">Out of stock</span></p>
+            {% endif %}
           </div>
 
           <h4>Анотація</h4>
           <p>{{ book_pk.description }}</p>
-
+          <div style="display: flex; align-items: center; width: 250px; justify-content: space-between;">
+            {% if user.is_authenticated and user.is_superuser %}
+              <br>
+              <a
+                  href="{% url 'library:book_update_view' book_pk.pk %}"
+                  class="btn-secondary"
+                  style="background-color: #FFDBBB">Editing
+              </a>
+              <br>
+              <a
+                  href="{% url 'library:book_delete_view' book_pk.pk %}"
+                  class="btn-secondary"
+                  style="background-color: #FFB09C">Delete
+              </a>
+            {% endif %}
+          </div>
           <div class="book-actions">
             <button class="btn">Забронювати книгу</button>
             <button class="btn-secondary">Купити книгу</button>

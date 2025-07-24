@@ -2,7 +2,7 @@ from django.contrib.auth import login
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 
 from library.form import RegistrationForm, BookFilterForm
@@ -26,6 +26,8 @@ def sign_up_view(request: HttpRequest) -> HttpResponse:
     )
 
 
+def profile(request):
+    return render(request, "profile/profile.html")
 
 
 def index_page_view(request: HttpRequest) -> HttpResponse:
@@ -84,17 +86,22 @@ class BookCreateAdminView(generic.CreateView):
         context["create_update_form"] = context.pop("form")
         return context
 
+    def get_success_url(self):
+        return reverse_lazy("library:book_page_view", kwargs={"pk": self.object.pk})
+
 
 class BookUpdateAdminView(generic.UpdateView):
     model = Book
     template_name = "catalog/create_update_form.html"
     fields = "__all__"
-    success_url = reverse_lazy("library:catalog_page_view")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["create_update_form"] = context.pop("form")
         return context
+
+    def get_success_url(self):
+        return reverse_lazy("library:book_page_view", kwargs={"pk": self.object.pk})
 
 
 class BookDeleteAdminView(generic.DeleteView):
