@@ -1,9 +1,9 @@
 from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 
-from library.form import RegistrationForm
+from library.form import RegistrationForm, BookFilterForm
 from library.models import Book
 
 
@@ -14,7 +14,7 @@ def sign_up_view(request: HttpRequest) -> HttpResponse:
             user = form.save(commit=False)
             user.save()
             login(request, user)
-            return redirect("library:catalog")
+            return redirect("library:catalog_page_view")
     else:
         form = RegistrationForm()
     return render(
@@ -25,6 +25,9 @@ def sign_up_view(request: HttpRequest) -> HttpResponse:
 
 
 
+
+def index_page_view(request: HttpRequest) -> HttpResponse:
+    return render(request, "index/index.html")
 
 
 def catalog_page_view(request: HttpRequest) -> HttpResponse:
@@ -57,4 +60,12 @@ def catalog_page_view(request: HttpRequest) -> HttpResponse:
     )
 
 
-
+def book_page_view(request: HttpRequest, pk: int) -> HttpResponse:
+    context = {
+        "book_pk": Book.objects.get(pk=pk),
+    }
+    return render(
+        request,
+        "catalog/book-page.html",
+        context=context
+    )
