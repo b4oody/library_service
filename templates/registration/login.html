@@ -1,0 +1,25 @@
+{% extends "base/base.html" %}
+{% block content %}
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <h1>Вхід</h1>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="auth-container">
+        <div id="loginSection">
+          <h1>Увійти</h1>
+          <form action="#" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn">Увійти</button>
+          </form>
+          <p class="switch-form">Немає облікового запису? <a href="{% url 'library:registration' %}">Зареєструватися</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}
