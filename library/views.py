@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from library.form import RegistrationForm, BookFilterForm
-from library.models import Book, Reservation, Purchase, LikedBook
+from library.models import Book, Reservation, Purchase, LikedBook, Genre, Author
 
 
 def sign_up_view(request: HttpRequest) -> HttpResponse:
@@ -25,6 +25,7 @@ def sign_up_view(request: HttpRequest) -> HttpResponse:
         "registration/registration.html",
         {"form": form}
     )
+
 
 @login_required
 def profile_page_view(request: HttpRequest) -> HttpResponse:
@@ -88,8 +89,8 @@ def book_page_view(request: HttpRequest, pk: int) -> HttpResponse:
     )
 
 
-class BookCreateAdminView(generic.CreateView):
-    model = Book
+class CreateAdminView(generic.CreateView):
+    model = Genre
     template_name = "catalog/create_update_form.html"
     fields = "__all__"
     success_url = reverse_lazy("library:catalog_page_view")
@@ -98,6 +99,10 @@ class BookCreateAdminView(generic.CreateView):
         context = super().get_context_data(**kwargs)
         context["create_update_form"] = context.pop("form")
         return context
+
+
+class BookCreateAdminView(CreateAdminView):
+    model = Book
 
     def get_success_url(self):
         return reverse_lazy("library:book_page_view", kwargs={"pk": self.object.pk})
@@ -121,3 +126,11 @@ class BookDeleteAdminView(generic.DeleteView):
     model = Book
     template_name = "catalog/delete_book_form.html"
     success_url = reverse_lazy("library:catalog_page_view")
+
+
+class GenreCreateAdminView(CreateAdminView):
+    model = Genre
+
+
+class AuthorCreateAdminView(CreateAdminView):
+    model = Author
