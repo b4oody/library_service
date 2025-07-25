@@ -19,7 +19,7 @@
           </div>
         {% else %}
           <div class="user-actions">
-            <a href="{% url 'library:profile' %}" class="btn-secondary">Porifle: {{ user.username }}</a>
+            <a href="{% url 'library:profile' %}" class="btn-secondary">Profile: {{ user.username }}</a>
             <form action="{% url 'library:logout' %}" method="post">
               {% csrf_token %}
               {{ form }}

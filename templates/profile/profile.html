@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
 
 {% block title %}
@@ -31,9 +32,14 @@
           <section id="userInfo" class="profile-section">
             <h2>Мої дані</h2>
             <div class="user-info">
-              <p><strong>Ім'я:</strong> Іван Петров</p>
-              <p><strong>Email:</strong> ivan.petrov@example.com</p>
-              <p><strong>Дата реєстрації:</strong> 01.01.2023</p>
+              <p><strong>Ім'я:</strong> {{ user.username }}</p>
+              {% if user.email %}
+                <p><strong>Email:</strong> {{ user.email }}</p>
+              {% endif %}
+              {% if user.first_name and user.last_name %}
+                <p><strong>Email:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+              {% endif %}
+              <p><strong>Дата реєстрації:</strong> {{ user.date_joined }}</p>
               <button class="btn-secondary">Редагувати профіль</button>
             </div>
           </section>
@@ -41,55 +47,77 @@
           <section id="reservedBooks" class="profile-section" style="display: none;">
             <h2>Заброньовані книги</h2>
             <div class="book-list">
-              <div class="book-item">
-                <img src="https://placehold.co/100x150/f0f0f0/000?text=Книга+1" alt="Обкладинка книги">
-                <h4>Дюна</h4>
-                <p>Френк Герберт</p>
-                <span class="status reserved">Заброньовано</span>
-              </div>
-              <div class="book-item">
-                <img src="https://placehold.co/100x150/f0f0f0/000?text=Книга+2" alt="Обкладинка книги">
-                <h4>1984</h4>
-                <p>Джордж Орвелл</p>
-                <span class="status reserved">Заброньовано</span>
-              </div>
+              {% for reservation in book_reservations %}
+                <div class="book-item">
+                  {% if reservation.book.cover_image_url %}
+                    <img src="{{ reservation.book.cover_image_url.url }}" alt="{{ reservation.book.title }}">
+                  {% else %}
+                    <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
+                  {% endif %}
+                  <h4>{{ reservation.book.title }}</h4>
+                  <p>{{ reservation.book.author.all|join:", " }}</p>
+                  <span class="status {{ reservation.status }}">{{ reservation.status }}</span>
+                </div>
+              {% endfor %}
             </div>
-            <p style="margin-top: 20px;">Тут будуть відображатися книги, які ви зарезервували.</p>
           </section>
 
           <section id="purchasedBooks" class="profile-section" style="display: none;">
             <h2>Придбані книги</h2>
             <div class="book-list">
-              <div class="book-item">
-                <img src="https://placehold.co/100x150/d1d1d1/000?text=Книга+3" alt="Обкладинка книги">
-                <h4>Майстер і Маргарита</h4>
-                <p>Михайло Булгаков</p>
-                <span class="status purchased">Придбано</span>
-              </div>
-              <div class="book-item">
-                <img src="https://placehold.co/100x150/d1d1d1/000?text=Книга+4" alt="Обкладинка книги">
-                <h4>Алхімік</h4>
-                <p>Пауло Коельйо</p>
-                <span class="status purchased">Придбано</span>
-              </div>
-            </div>
-            <p style="margin-top: 20px;">Тут будуть відображатися книги, які ви придбали.</p>
+
+              {% for purchase  in book_purchases %}
+                <div class="book-item">
+                  {% if purchase.book.cover_image_url %}
+                    <img src="{{ purchase.book.cover_image_url.url }}" alt="{{ purchase.book.title }}">
+                  {% else %}
+                    <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
+                  {% endif %}
+                  <h4>{{ purchase.book.title }}</h4>
+                  <p>{{ purchase.book.author.all|join:", " }}</p>
+                  <span class="status {{ purchase.payment_status }}">{{ purchase.payment_status }}</span>
+                </div>
+              {% endfor %}
+
           </section>
 
           <section id="likedBooks" class="profile-section" style="display: none;">
             <h2>Улюблені книги</h2>
-            <div class="book-list">
+            {% for book_like  in book_liked %}
               <div class="book-item">
-                <img src="https://placehold.co/100x150/e8e8e8/000?text=Книга+5" alt="Обкладинка книги">
-                <h4>Володар перснів</h4>
-                <p>Дж. Р. Р. Толкін</p>
-                <span class="status liked">Улюблена</span>
+                {% if book_like.book.cover_image_url %}
+                  <img src="{{ book_like.book.cover_image_url.url }}" alt="{{ book_like.book.title }}">
+                {% else %}
+                  <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
+                {% endif %}
+                <h4>{{ book_like.book.title }}</h4>
+                <p>{{ book_like.book.author.all|join:", " }}</p>
               </div>
-            </div>
-            <p style="margin-top: 20px;">Тут будуть відображатися книги, які ви додали до улюблених.</p>
+            {% endfor %}
           </section>
         </div>
       </div>
     </div>
   </main>
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const navLinks = document.querySelectorAll('.profile-nav ul li a');
+          const profileSections = document.querySelectorAll('.profile-section');
+          navLinks.forEach(link => {
+              link.addEventListener('click', function (e) {
+                  e.preventDefault();
+                  navLinks.forEach(nav => nav.classList.remove('active'));
+                  this.classList.add('active');
+                  const targetSectionId = this.getAttribute('href').substring(1); // Видаляємо '#'
+                  profileSections.forEach(section => {
+                      section.style.display = 'none';
+                  });
+                  const targetSection = document.getElementById(targetSectionId);
+                  if (targetSection) {
+                      targetSection.style.display = 'block';
+                  }
+              });
+          });
+      });
+  </script>
 {% endblock %}

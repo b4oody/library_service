@@ -631,19 +631,19 @@ main {
     font-size: 12px;
 }
 
-.book-item .status.reserved {
+.book-item .status.reserved, .status.pending {
     background-color: #f39c12; /* Помаранчевий */
 }
 
-.book-item .status.purchased {
+.book-item .status.purchased, .status.completed, .status.paid{
     background-color: #27ae60; /* Зелений */
 }
 
-.book-item .status.in-process {
+.book-item .status.in-process, .status.active{
     background-color: #3498db; /* Синій */
 }
 
-.book-item .status.liked {
+.book-item .status.liked, .status.failed, .status.cancelled{
     background-color: #e74c3c; /* Червоний */
 }
 

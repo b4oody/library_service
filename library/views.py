@@ -1,12 +1,13 @@
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views import generic
 
 from library.form import RegistrationForm, BookFilterForm
-from library.models import Book
+from library.models import Book, Reservation, Purchase, LikedBook
 
 
 def sign_up_view(request: HttpRequest) -> HttpResponse:
@@ -25,9 +26,21 @@ def sign_up_view(request: HttpRequest) -> HttpResponse:
         {"form": form}
     )
 
+@login_required
+def profile_page_view(request: HttpRequest) -> HttpResponse:
+    books_reservation = Reservation.objects.filter(user=request.user)
+    book_purchases = Purchase.objects.filter(user=request.user)
+    books_liked = LikedBook.objects.filter(user=request.user)
 
-def profile(request):
-    return render(request, "profile/profile.html")
+    return render(
+        request,
+        "profile/profile.html",
+        context={
+            "book_reservations": books_reservation,
+            "book_purchases": book_purchases,
+            "book_liked": books_liked
+        }
+    )
 
 
 def index_page_view(request: HttpRequest) -> HttpResponse:
