@@ -9,7 +9,7 @@
           <img src="{{ book_pk.cover_image_url.url }}" alt="Обкладинка книги Дюна">
         </div>
         <div class="book-info">
-          <h1>{{ book_pk.title }}</h1>
+          <h1>{{ book_pk.title }} {% if is_liked_book_by_user %}&#10084{% endif %}</h1>
           <p class="author">{{ book_pk.author.all|join:", " }}</p>
 
           <div class="book-meta">
@@ -43,7 +43,16 @@
           <div class="book-actions">
             <button class="btn">Забронювати книгу</button>
             <button class="btn-secondary">Купити книгу</button>
-            <button class="btn-secondary">Додати до улюблених</button>
+            <form action="{% url 'library:add_liked_book' book_pk.pk %}" method="post">
+              {% csrf_token %}
+              {% if not is_liked_book_by_user %}
+                <button class="btn-secondary">Добавити до улюблених</button>
+                </form>
+              {% else %}
+                <a href="{% url 'library:delete_liked_book_view' book_pk.pk %}" class="btn-secondary">Видалити з
+                  улюблених</a>
+              {% endif %}
+
           </div>
         </div>
       </div>

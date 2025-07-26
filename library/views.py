@@ -79,8 +79,10 @@ def catalog_page_view(request: HttpRequest) -> HttpResponse:
 
 
 def book_page_view(request: HttpRequest, pk: int) -> HttpResponse:
+    is_liked_book_by_user = LikedBook.objects.filter(user=request.user, book=pk)
     context = {
         "book_pk": Book.objects.get(pk=pk),
+        "is_liked_book_by_user": is_liked_book_by_user
     }
     return render(
         request,
@@ -134,3 +136,17 @@ class GenreCreateAdminView(CreateAdminView):
 
 class AuthorCreateAdminView(CreateAdminView):
     model = Author
+
+
+def add_liked_book(request: HttpRequest, pk: int) -> HttpResponse:
+    book = Book.objects.get(pk=pk)
+    liked_book = LikedBook.objects.create(user=request.user, book=book)
+    liked_book.save()
+    return redirect("library:book_page_view", pk=pk)
+
+
+def delete_liked_book_view(request: HttpRequest, pk: int) -> HttpResponse:
+    book = Book.objects.get(pk=pk)
+    liked_book = LikedBook.objects.get(user=request.user, book=book)
+    liked_book.delete()
+    return redirect("library:book_page_view", pk=pk)

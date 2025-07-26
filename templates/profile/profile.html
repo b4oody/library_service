@@ -92,6 +92,7 @@
                 {% endif %}
                 <h4>{{ book_like.book.title }}</h4>
                 <p>{{ book_like.book.author.all|join:", " }}</p>
+                <a href="{% url 'library:delete_liked_book_view' book_like.book.pk %}" class="btn-secondary">Delete</a>
               </div>
             {% endfor %}
           </section>

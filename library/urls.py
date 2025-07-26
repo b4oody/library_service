@@ -11,6 +11,8 @@ from library.views import (
     BookDeleteAdminView,
     GenreCreateAdminView,
     AuthorCreateAdminView,
+    add_liked_book,
+    delete_liked_book_view,
 )
 
 urlpatterns = [
@@ -25,6 +27,8 @@ urlpatterns = [
     path("book_delete/<int:pk>/", BookDeleteAdminView.as_view(), name="book_delete_view"),
     path("genre_create/", GenreCreateAdminView.as_view(), name="genre_create_view"),
     path("author_create/", AuthorCreateAdminView.as_view(), name="author_create_view"),
+    path("add_liked_book/<int:pk>/", add_liked_book, name="add_liked_book"),
+    path("delete_liked_book/<int:pk>/", delete_liked_book_view, name="delete_liked_book_view"),
 
 ]
 
