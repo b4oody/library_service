@@ -88,9 +88,8 @@ class Purchase(models.Model):
         on_delete=models.CASCADE,
         related_name="purchases",
     )
-    book = models.ForeignKey(
+    books = models.ManyToManyField(
         Book,
-        on_delete=models.CASCADE,
         related_name="purchases",
     )
     purchase_date = models.DateTimeField(auto_now_add=True, )
