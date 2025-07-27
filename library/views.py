@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from library.form import RegistrationForm, BookFilterForm
-from library.models import Book, Reservation, Purchase, LikedBook, Genre, Author
+from library.models import Book, Purchase, LikedBook, Genre, Author
 
 
 def sign_up_view(request: HttpRequest) -> HttpResponse:
@@ -29,7 +29,6 @@ def sign_up_view(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def profile_page_view(request: HttpRequest) -> HttpResponse:
-    books_reservation = Reservation.objects.filter(user=request.user)
     book_purchases = Purchase.objects.filter(user=request.user)
     books_liked = LikedBook.objects.filter(user=request.user)
 
@@ -37,7 +36,6 @@ def profile_page_view(request: HttpRequest) -> HttpResponse:
         request,
         "profile/profile.html",
         context={
-            "book_reservations": books_reservation,
             "book_purchases": book_purchases,
             "book_liked": books_liked
         }

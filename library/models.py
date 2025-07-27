@@ -7,17 +7,12 @@ from django.db import models
 from config import settings
 
 
-class StatusReservation(models.TextChoices):
-    PENDING = "pending"
-    ACTIVE = "active"
-    COMPLETED = "completed"
-    CANCELLED = "cancelled"
-
 class PaymentReservation(models.TextChoices):
     PENDING = "pending"
     PAID = "paid"
     FAILED = "failed"
     CANCELLED = "cancelled"
+
 
 class User(AbstractUser):
     pass
@@ -38,7 +33,6 @@ class Author(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-
 class Genre(models.Model):
     genre_name = models.CharField(max_length=100, unique=True)
 
@@ -48,6 +42,7 @@ class Genre(models.Model):
     def __str__(self):
         return self.genre_name
 
+
 def upload_to_uuid(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"{uuid.uuid4()}.{ext}"
@@ -55,16 +50,17 @@ def upload_to_uuid(instance, filename):
 
     return os.path.join(folder, filename)
 
+
 class Book(models.Model):
     title = models.CharField(max_length=255)
     author = models.ManyToManyField(
         Author,
         related_name="books"
     )
-    genres = models.ManyToManyField(Genre, related_name="books",)
+    genres = models.ManyToManyField(Genre, related_name="books", )
     publication_year = models.DateField()
     description = models.TextField()
-    quantity = models.PositiveIntegerField(default=1,)
+    quantity = models.PositiveIntegerField(default=1, )
     price = models.DecimalField(max_digits=6, decimal_places=2)
     cover_image_url = models.ImageField(
         upload_to=upload_to_uuid,
@@ -83,35 +79,10 @@ class Book(models.Model):
         return self.quantity > 0
 
 
-class Reservation(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="reservations",
-    )
-    book = models.ForeignKey(
-        Book,
-        on_delete=models.CASCADE,
-        related_name="reservations",
-    )
-
-    reservation_date = models.DateTimeField(auto_now_add=True,)
-    due_date = models.DateField()
-    status = models.CharField(
-        max_length=20,
-        choices=StatusReservation.choices,
-        default="pending",
-    )
-
-    class Meta:
-        unique_together = ("user", "book")
-        ordering = ["-reservation_date"]
-
-    def __str__(self):
-        return f"The {self.book.title} reserved by {self.user}"
-
-
 class Purchase(models.Model):
+    first_name = models.CharField(max_length=200, blank=True)
+    last_name = models.CharField(max_length=200, blank=True)
+    email = models.EmailField(blank=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -122,8 +93,7 @@ class Purchase(models.Model):
         on_delete=models.CASCADE,
         related_name="purchases",
     )
-    purchase_date = models.DateTimeField(auto_now_add=True,)
-    quantity = models.PositiveIntegerField(default=1)
+    purchase_date = models.DateTimeField(auto_now_add=True, )
     total_amount = models.DecimalField(
         max_digits=8,
         decimal_places=2,

@@ -21,7 +21,6 @@
           <nav class="profile-nav">
             <ul>
               <li><a href="#userInfo" class="active">Мої дані</a></li>
-              <li><a href="#reservedBooks">Заброньовані книги</a></li>
               <li><a href="#purchasedBooks">Придбані книги</a></li>
               <li><a href="#likedBooks">Улюблені книги</a></li>
             </ul>
@@ -43,25 +42,6 @@
               <button class="btn-secondary">Редагувати профіль</button>
             </div>
           </section>
-
-          <section id="reservedBooks" class="profile-section" style="display: none;">
-            <h2>Заброньовані книги</h2>
-            <div class="book-list">
-              {% for reservation in book_reservations %}
-                <div class="book-item">
-                  {% if reservation.book.cover_image_url %}
-                    <img src="{{ reservation.book.cover_image_url.url }}" alt="{{ reservation.book.title }}">
-                  {% else %}
-                    <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
-                  {% endif %}
-                  <h4>{{ reservation.book.title }}</h4>
-                  <p>{{ reservation.book.author.all|join:", " }}</p>
-                  <span class="status {{ reservation.status }}">{{ reservation.status }}</span>
-                </div>
-              {% endfor %}
-            </div>
-          </section>
-
           <section id="purchasedBooks" class="profile-section" style="display: none;">
             <h2>Придбані книги</h2>
             <div class="book-list">
