@@ -47,16 +47,19 @@
             <div class="book-list">
 
               {% for purchase  in book_purchases %}
-                <div class="book-item">
-                  {% if purchase.book.cover_image_url %}
-                    <img src="{{ purchase.book.cover_image_url.url }}" alt="{{ purchase.book.title }}">
-                  {% else %}
-                    <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
-                  {% endif %}
-                  <h4>{{ purchase.book.title }}</h4>
-                  <p>{{ purchase.book.author.all|join:", " }}</p>
-                  <span class="status {{ purchase.payment_status }}">{{ purchase.payment_status }}</span>
-                </div>
+                {% for book in purchase.books.all %}
+                  <div class="book-item">
+                    {% if book.cover_image_url %}
+                      <img src="{{ book.cover_image_url.url }}" alt="{{ book.title }}">
+                    {% else %}
+                      <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
+                    {% endif %}
+                    <h4>{{ book.title }}</h4>
+                    <p>{{ book.author.all|join:", " }}</p>
+                    <p>{{ book.price }}$</p>
+                    <span class="status {{ purchase.payment_status }}">{{ purchase.payment_status }}</span>
+                  </div>
+                {% endfor %}
               {% endfor %}
 
           </section>

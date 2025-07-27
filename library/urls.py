@@ -13,6 +13,7 @@ from library.views import (
     AuthorCreateAdminView,
     add_liked_book,
     delete_liked_book_view,
+    PurchaseCreateView,
 )
 
 urlpatterns = [
@@ -29,6 +30,7 @@ urlpatterns = [
     path("author_create/", AuthorCreateAdminView.as_view(), name="author_create_view"),
     path("add_liked_book/<int:pk>/", add_liked_book, name="add_liked_book"),
     path("delete_liked_book/<int:pk>/", delete_liked_book_view, name="delete_liked_book_view"),
+    path("create_purchase/", PurchaseCreateView.as_view(), name="purchase_create_view"),
 
 ]
 

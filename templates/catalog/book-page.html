@@ -41,8 +41,7 @@
             {% endif %}
           </div>
           <div class="book-actions">
-            <button class="btn">Забронювати книгу</button>
-            <button class="btn-secondary">Купити книгу</button>
+            <a href="{% url 'library:purchase_create_view' %}" class="btn">Купити книгу</a>
             <form action="{% url 'library:add_liked_book' book_pk.pk %}" method="post">
               {% csrf_token %}
               {% if not is_liked_book_by_user %}

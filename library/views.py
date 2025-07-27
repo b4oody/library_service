@@ -148,3 +148,25 @@ def delete_liked_book_view(request: HttpRequest, pk: int) -> HttpResponse:
     liked_book = LikedBook.objects.get(user=request.user, book=book)
     liked_book.delete()
     return redirect("library:book_page_view", pk=pk)
+
+
+class PurchaseCreateView(CreateAdminView):
+    model = Purchase
+    fields = ["first_name", "last_name", "email", "books"]
+    template_name = "catalog/create_purchase_form.html"
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+
+        book = form.cleaned_data["books"]
+        total_amount = 0
+        for book in book:
+         total_amount += book.price
+
+        instance.user = self.request.user
+        instance.total_amount = total_amount
+        instance.save()
+        return super().form_valid(form)
+
+def reservation_create_view(request: HttpRequest) -> HttpResponse:
+    pass
