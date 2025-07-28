@@ -1,0 +1,78 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+
+{% block content %}
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <h1>Catalog Books</h1>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="catalog-layout">
+        <aside class="filters">
+          <h3>Filters</h3>
+          <form method="get" action="#">
+            <div class="filter-group">
+              {{ form_filter }}
+            </div>
+            <button class="btn">Apply</button>
+          </form>
+        </aside>
+
+        <div class="catalog-books">
+          {% if user.is_authenticated and user.is_superuser %}
+            <br>
+            <a
+                href="{% url 'library:book_create_view' %}"
+                class="btn-secondary"
+                style="background-color: #FFEE8C">Create Book
+            </a>
+            <a
+                href="{% url 'library:genre_create_view' %}"
+                class="btn-secondary"
+                style="background-color: #FFEE8C">Create Genre
+            </a>
+            <a
+                href="{% url 'library:author_create_view' %}"
+                class="btn-secondary"
+                style="background-color: #FFEE8C">Create Author
+            </a>
+            <br>
+            <br>
+          {% endif %}
+          <div class="books-grid">
+            {% for book in books %}
+              <div class="book-card">
+                {% if book_pk.cover_image_url %}
+                  <img src="{{ book_pk.cover_image_url.url }}" alt="{{ book_pk.title }}">
+                {% else %}
+                  <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
+                {% endif %}
+                <h3>{{ book.title }}</h3>
+                <p>{{ book.author.all|join:", " }}</p>
+                <a href="{% url 'library:book_page_view' book.pk %}" class="btn-secondary">Details</a>
+                {% if user.is_authenticated and user.is_superuser %}
+                  <br>
+                  <a
+                      href="{% url 'library:book_update_view' book.pk %}"
+                      class="btn-secondary"
+                      style="background-color: #FFDBBB">Editing
+                  </a>
+                  <br>
+                  <a
+                      href="{% url 'library:book_delete_view' book.pk %}"
+                      class="btn-secondary"
+                      style="background-color: #FFB09C">Delete
+                  </a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}

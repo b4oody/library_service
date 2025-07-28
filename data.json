@@ -1,0 +1,327 @@
+[
+  {
+    "model": "library.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$Dg2SGy5VOX4xsO04GfVC2I$YJq+KY9NNdOT05k/nmdqkF2RzrDdSvIBK89fGkL7SIo=",
+      "last_login": "2025-07-25T22:49:36.739Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2025-07-23T12:17:28.805Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "library.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$CGU7OV07mkzSu9Yu5uv06w$cx8sW3ELrg621WZSL7Dha7gYaFN2ezX1TOxLAHC1Ltg=",
+      "last_login": "2025-07-25T22:55:49.239Z",
+      "is_superuser": false,
+      "username": "user1",
+      "first_name": "",
+      "last_name": "",
+      "email": "user1@user1.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-07-24T11:57:27.140Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "library.author",
+    "pk": 1,
+    "fields": {
+      "first_name": "FirstName1",
+      "last_name": "LastName1"
+    }
+  },
+  {
+    "model": "library.author",
+    "pk": 2,
+    "fields": {
+      "first_name": "FirstName2",
+      "last_name": "LastName2"
+    }
+  },
+  {
+    "model": "library.author",
+    "pk": 3,
+    "fields": {
+      "first_name": "FirstName3",
+      "last_name": "LastName3"
+    }
+  },
+  {
+    "model": "library.author",
+    "pk": 4,
+    "fields": {
+      "first_name": "TestCreateAuthor1",
+      "last_name": "TestCreateAutho2"
+    }
+  },
+  {
+    "model": "library.genre",
+    "pk": 1,
+    "fields": {
+      "genre_name": "Genre1"
+    }
+  },
+  {
+    "model": "library.genre",
+    "pk": 2,
+    "fields": {
+      "genre_name": "Genre2"
+    }
+  },
+  {
+    "model": "library.genre",
+    "pk": 3,
+    "fields": {
+      "genre_name": "CreateGenreTest1"
+    }
+  },
+  {
+    "model": "library.genre",
+    "pk": 4,
+    "fields": {
+      "genre_name": "TestCreateGenre1"
+    }
+  },
+  {
+    "model": "library.book",
+    "pk": 1,
+    "fields": {
+      "title": "Title111",
+      "publication_year": "2025-07-08",
+      "description": "something",
+      "quantity": 0,
+      "price": "200.00",
+      "cover_image_url": "photos/141f3f91-a47f-418b-bcd0-21407e0b4ca5.jpg",
+      "author": [
+        1,
+        2,
+        3
+      ],
+      "genres": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "library.book",
+    "pk": 2,
+    "fields": {
+      "title": "Title2",
+      "publication_year": "2025-07-15",
+      "description": "something",
+      "quantity": 1,
+      "price": "20.00",
+      "cover_image_url": "photos/a631fb9a-4677-4fbf-9c96-82b273bded1b.jpg",
+      "author": [
+        1,
+        2
+      ],
+      "genres": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "library.book",
+    "pk": 3,
+    "fields": {
+      "title": "Title3",
+      "publication_year": "2025-07-10",
+      "description": "something",
+      "quantity": 1,
+      "price": "1.10",
+      "cover_image_url": "photos/8c2a8329-dacb-46ff-98f6-2abd2077941a.jpg",
+      "author": [
+        2
+      ],
+      "genres": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "library.book",
+    "pk": 7,
+    "fields": {
+      "title": "Title4",
+      "publication_year": "2025-07-10",
+      "description": "something",
+      "quantity": 1,
+      "price": "200.00",
+      "cover_image_url": "photos/956b707f-b5a4-4248-8fa6-7ee191159fda.jpg",
+      "author": [
+        1
+      ],
+      "genres": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "library.book",
+    "pk": 8,
+    "fields": {
+      "title": "Title4",
+      "publication_year": "2025-07-08",
+      "description": "something",
+      "quantity": 1,
+      "price": "300.00",
+      "cover_image_url": "photos/6d129138-0c0f-4a39-9212-8c9b2a711819.jpg",
+      "author": [
+        1
+      ],
+      "genres": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "library.book",
+    "pk": 9,
+    "fields": {
+      "title": "TestTitleCreate1",
+      "publication_year": "2025-07-10",
+      "description": "somehting",
+      "quantity": 1,
+      "price": "150.00",
+      "cover_image_url": "photos/7f63d90e-5a00-4332-84a4-0e02644cef70.jpg",
+      "author": [
+        1
+      ],
+      "genres": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "library.book",
+    "pk": 10,
+    "fields": {
+      "title": "TitleTestCreate111",
+      "publication_year": "2025-07-15",
+      "description": "somehting",
+      "quantity": 1,
+      "price": "200.00",
+      "cover_image_url": "photos/8d83545e-4fcd-4c53-86b7-7488ad892750.jpg",
+      "author": [
+        3
+      ],
+      "genres": [
+        4
+      ]
+    }
+  },
+  {
+    "model": "library.purchase",
+    "pk": 1,
+    "fields": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "user": 1,
+      "purchase_date": "2025-07-23T12:33:21.688Z",
+      "total_amount": "200.00",
+      "payment_status": "pending",
+      "books": []
+    }
+  },
+  {
+    "model": "library.purchase",
+    "pk": 2,
+    "fields": {
+      "first_name": "Vlad",
+      "last_name": "Rym",
+      "email": "user1@gmail.com",
+      "user": 2,
+      "purchase_date": "2025-07-26T22:25:38.571Z",
+      "total_amount": "150.00",
+      "payment_status": "pending",
+      "books": []
+    }
+  },
+  {
+    "model": "library.purchase",
+    "pk": 3,
+    "fields": {
+      "first_name": "First1",
+      "last_name": "Last1",
+      "email": "test1@gmail.com",
+      "user": 2,
+      "purchase_date": "2025-07-27T21:23:32.835Z",
+      "total_amount": "370.00",
+      "payment_status": "pending",
+      "books": [
+        9,
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "model": "library.likedbook",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "book": 1,
+      "added_date": "2025-07-23T12:33:05.457Z"
+    }
+  },
+  {
+    "model": "library.likedbook",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "book": 8,
+      "added_date": "2025-07-25T15:02:25.472Z"
+    }
+  },
+  {
+    "model": "library.likedbook",
+    "pk": 3,
+    "fields": {
+      "user": 1,
+      "book": 3,
+      "added_date": "2025-07-25T15:02:47.190Z"
+    }
+  },
+  {
+    "model": "library.likedbook",
+    "pk": 4,
+    "fields": {
+      "user": 1,
+      "book": 9,
+      "added_date": "2025-07-25T15:02:57.076Z"
+    }
+  },
+  {
+    "model": "library.likedbook",
+    "pk": 22,
+    "fields": {
+      "user": 2,
+      "book": 2,
+      "added_date": "2025-07-25T23:03:59.085Z"
+    }
+  },
+  {
+    "model": "library.likedbook",
+    "pk": 30,
+    "fields": {
+      "user": 2,
+      "book": 9,
+      "added_date": "2025-07-27T21:27:53.469Z"
+    }
+  }
+]

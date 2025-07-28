@@ -1,0 +1,77 @@
+{% extends "base/base.html" %}
+
+{% load static %}
+
+{% block header %}
+  {% include "includes/headers/header-main.html" %}
+{% endblock %}
+
+{% block content %}
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Відкрийте для себе світ знань</h1>
+        <p>Ваша улюблена книга вже чекає на вас.</p>
+        <a href="{% url 'library:catalog_page_view' %}" class="btn">Перейти до каталогу</a>
+      </div>
+    </section>
+
+    <section class="books-section">
+      <div class="container">
+        <h2 class="section-title">Нові надходження</h2>
+        <div class="books-grid">
+          <div class="book-card">
+            <img src="https://placehold.co/300x450/e8e8e8/000?text=Книга+1" alt="Обкладинка книги">
+            <h3>Дюна</h3>
+            <p>Френк Герберт</p>
+            <a href="book-page.html" class="btn-secondary">Детальніше</a>
+          </div>
+          <div class="book-card">
+            <img src="https://placehold.co/300x450/e8e8e8/000?text=Книга+2" alt="Обкладинка книги">
+            <h3>1984</h3>
+            <p>Джордж Орвелл</p>
+            <a href="book-page.html" class="btn-secondary">Детальніше</a>
+          </div>
+          <div class="book-card">
+            <img src="https://placehold.co/300x450/e8e8e8/000?text=Книга+3" alt="Обкладинка книги">
+            <h3>Майстер і Маргарита</h3>
+            <p>Михайло Булгаков</p>
+            <a href="book-page.html" class="btn-secondary">Детальніше</a>
+          </div>
+          <div class="book-card">
+            <img src="https://placehold.co/300x450/e8e8e8/000?text=Книга+4" alt="Обкладинка книги">
+            <h3>Колгосп тварин</h3>
+            <p>Джордж Орвелл</p>
+            <a href="book-page.html" class="btn-secondary">Детальніше</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="books-section bg-light">
+      <div class="container">
+        <h2 class="section-title">Популярні книги</h2>
+        <div class="books-grid">
+          <div class="book-card">
+            <img src="https://placehold.co/300x450/d1d1d1/000?text=Книга+5" alt="Обкладинка книги">
+            <h3>Володар перснів</h3>
+            <p>Дж. Р. Р. Толкін</p>
+            <a href="book-page.html" class="btn-secondary">Детальніше</a>
+          </div>
+          <div class="book-card">
+            <img src="https://placehold.co/300x450/d1d1d1/000?text=Книга+6" alt="Обкладинка книги">
+            <h3>Гаррі Поттер і філософський камінь</h3>
+            <p>Дж. К. Роулінг</p>
+            <a href="book-page.html" class="btn-secondary">Детальніше</a>
+          </div>
+          <div class="book-card">
+            <img src="https://placehold.co/300x450/d1d1d1/000?text=Книга+7" alt="Обкладинка книги">
+            <h3>Алхімік</h3>
+            <p>Пауло Коельйо</p>
+            <a href="book-page.html" class="btn-secondary">Детальніше</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+
+{% block title %}
+  <title>Профіль користувача — Бібліотека</title>
+{% endblock %}
+
+{% block content %}
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <h1>Мій профіль</h1>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="profile-layout">
+        <aside class="profile-sidebar">
+          <h3>Навігація</h3>
+          <nav class="profile-nav">
+            <ul>
+              <li><a href="#userInfo" class="active">Мої дані</a></li>
+              <li><a href="#purchasedBooks">Придбані книги</a></li>
+              <li><a href="#likedBooks">Улюблені книги</a></li>
+            </ul>
+          </nav>
+        </aside>
+
+        <div class="profile-content">
+          <section id="userInfo" class="profile-section">
+            <h2>Мої дані</h2>
+            <div class="user-info">
+              <p><strong>Ім'я:</strong> {{ user.username }}</p>
+              {% if user.email %}
+                <p><strong>Email:</strong> {{ user.email }}</p>
+              {% endif %}
+              {% if user.first_name and user.last_name %}
+                <p><strong>Email:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+              {% endif %}
+              <p><strong>Дата реєстрації:</strong> {{ user.date_joined }}</p>
+              <button class="btn-secondary">Редагувати профіль</button>
+            </div>
+          </section>
+          <section id="purchasedBooks" class="profile-section" style="display: none;">
+            <h2>Придбані книги</h2>
+            <div class="book-list">
+
+              {% for purchase  in book_purchases %}
+                {% for book in purchase.books.all %}
+                  <div class="book-item">
+                    {% if book.cover_image_url %}
+                      <img src="{{ book.cover_image_url.url }}" alt="{{ book.title }}">
+                    {% else %}
+                      <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
+                    {% endif %}
+                    <h4>{{ book.title }}</h4>
+                    <p>{{ book.author.all|join:", " }}</p>
+                    <p>{{ book.price }}$</p>
+                    <span class="status {{ purchase.payment_status }}">{{ purchase.payment_status }}</span>
+                  </div>
+                {% endfor %}
+              {% endfor %}
+
+          </section>
+
+          <section id="likedBooks" class="profile-section" style="display: none;">
+            <h2>Улюблені книги</h2>
+            {% for book_like  in book_liked %}
+              <div class="book-item">
+                {% if book_like.book.cover_image_url %}
+                  <img src="{{ book_like.book.cover_image_url.url }}" alt="{{ book_like.book.title }}">
+                {% else %}
+                  <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
+                {% endif %}
+                <h4>{{ book_like.book.title }}</h4>
+                <p>{{ book_like.book.author.all|join:", " }}</p>
+                <a href="{% url 'library:delete_liked_book_view' book_like.book.pk %}" class="btn-secondary">Delete</a>
+              </div>
+            {% endfor %}
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const navLinks = document.querySelectorAll('.profile-nav ul li a');
+          const profileSections = document.querySelectorAll('.profile-section');
+          navLinks.forEach(link => {
+              link.addEventListener('click', function (e) {
+                  e.preventDefault();
+                  navLinks.forEach(nav => nav.classList.remove('active'));
+                  this.classList.add('active');
+                  const targetSectionId = this.getAttribute('href').substring(1); // Видаляємо '#'
+                  profileSections.forEach(section => {
+                      section.style.display = 'none';
+                  });
+                  const targetSection = document.getElementById(targetSectionId);
+                  if (targetSection) {
+                      targetSection.style.display = 'block';
+                  }
+              });
+          });
+      });
+  </script>
+{% endblock %}
