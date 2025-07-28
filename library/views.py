@@ -1,5 +1,6 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
@@ -77,7 +78,10 @@ def catalog_page_view(request: HttpRequest) -> HttpResponse:
 
 
 def book_page_view(request: HttpRequest, pk: int) -> HttpResponse:
-    is_liked_book_by_user = LikedBook.objects.filter(user=request.user, book=pk)
+    is_liked_book_by_user = False
+    if request.user.is_authenticated:
+        is_liked_book_by_user = LikedBook.objects.filter(user=request.user, book=pk)
+
     context = {
         "book_pk": Book.objects.get(pk=pk),
         "is_liked_book_by_user": is_liked_book_by_user
@@ -136,6 +140,7 @@ class AuthorCreateAdminView(CreateAdminView):
     model = Author
 
 
+@login_required
 def add_liked_book(request: HttpRequest, pk: int) -> HttpResponse:
     book = Book.objects.get(pk=pk)
     liked_book = LikedBook.objects.create(user=request.user, book=book)
@@ -143,6 +148,7 @@ def add_liked_book(request: HttpRequest, pk: int) -> HttpResponse:
     return redirect("library:book_page_view", pk=pk)
 
 
+@login_required
 def delete_liked_book_view(request: HttpRequest, pk: int) -> HttpResponse:
     book = Book.objects.get(pk=pk)
     liked_book = LikedBook.objects.get(user=request.user, book=book)
@@ -150,7 +156,7 @@ def delete_liked_book_view(request: HttpRequest, pk: int) -> HttpResponse:
     return redirect("library:book_page_view", pk=pk)
 
 
-class PurchaseCreateView(CreateAdminView):
+class PurchaseCreateView(LoginRequiredMixin, CreateAdminView):
     model = Purchase
     fields = ["first_name", "last_name", "email", "books"]
     template_name = "catalog/create_purchase_form.html"
@@ -161,12 +167,9 @@ class PurchaseCreateView(CreateAdminView):
         book = form.cleaned_data["books"]
         total_amount = 0
         for book in book:
-         total_amount += book.price
+            total_amount += book.price
 
         instance.user = self.request.user
         instance.total_amount = total_amount
         instance.save()
         return super().form_valid(form)
-
-def reservation_create_view(request: HttpRequest) -> HttpResponse:
-    pass

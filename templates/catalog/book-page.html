@@ -9,7 +9,11 @@
           <img src="{{ book_pk.cover_image_url.url }}" alt="Обкладинка книги Дюна">
         </div>
         <div class="book-info">
-          <h1>{{ book_pk.title }} {% if is_liked_book_by_user %}&#10084{% endif %}</h1>
+          <h1>{{ book_pk.title }}
+            {% if is_liked_book_by_user %}
+              &#10084
+            {% endif %}
+          </h1>
           <p class="author">{{ book_pk.author.all|join:", " }}</p>
 
           <div class="book-meta">
@@ -51,7 +55,6 @@
                 <a href="{% url 'library:delete_liked_book_view' book_pk.pk %}" class="btn-secondary">Видалити з
                   улюблених</a>
               {% endif %}
-
           </div>
         </div>
       </div>
