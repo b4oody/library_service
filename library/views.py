@@ -47,7 +47,7 @@ def index_page_view(request: HttpRequest) -> HttpResponse:
 
 
 def catalog_page_view(request: HttpRequest) -> HttpResponse:
-    books = Book.objects.all()
+    books = Book.objects.prefetch_related("author", "genres")
     form_filter = BookFilterForm(request.GET)
     if form_filter.is_valid():
         genre = form_filter.cleaned_data["genre"]
