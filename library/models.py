@@ -2,6 +2,7 @@ import os
 import uuid
 
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from config import settings
@@ -19,8 +20,8 @@ class User(AbstractUser):
 
 
 class Author(models.Model):
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
 
     class Meta:
         ordering = ["last_name", "first_name"]
@@ -34,7 +35,7 @@ class Author(models.Model):
 
 
 class Genre(models.Model):
-    genre_name = models.CharField(max_length=100, unique=True)
+    genre_name = models.CharField(max_length=50, unique=True)
 
     class Meta:
         ordering = ["genre_name"]
@@ -50,9 +51,13 @@ def upload_to_uuid(instance, filename):
 
     return os.path.join(folder, filename)
 
+def validate_photo_size(value):
+    MAX_UPLOAD_SIZE = 1 * 1024 * 1024
+    if value.size > MAX_UPLOAD_SIZE:
+        raise ValidationError("Файл занадто великий. Максимальний розмір — 1 MB.")
 
 class Book(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=100)
     author = models.ManyToManyField(
         Author,
         related_name="books"
@@ -65,7 +70,8 @@ class Book(models.Model):
     cover_image_url = models.ImageField(
         upload_to=upload_to_uuid,
         blank=True,
-        null=True
+        null=True,
+        validators=[validate_photo_size]
     )
 
     class Meta:
@@ -80,8 +86,8 @@ class Book(models.Model):
 
 
 class Purchase(models.Model):
-    first_name = models.CharField(max_length=200, blank=True)
-    last_name = models.CharField(max_length=200, blank=True)
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
     email = models.EmailField(blank=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
