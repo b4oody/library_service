@@ -6,7 +6,11 @@
     <div class="container">
       <div class="book-details-layout">
         <div class="book-cover">
-          <img src="{{ book_pk.cover_image_url.url }}" alt="Обкладинка книги Дюна">
+          {% if book_pk.cover_image_url %}
+            <img src="{{ book_pk.cover_image_url.url }}" alt="{{ book_pk.title }}">
+          {% else %}
+            <img src="{% static 'assets/pics/44014ddd859a3d1efa1d9e22abd33c36.jpg' %}" alt="No image">
+          {% endif %}
         </div>
         <div class="book-info">
           <h1>{{ book_pk.title }}

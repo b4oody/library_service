@@ -52,7 +52,7 @@
                     {% if book.cover_image_url %}
                       <img src="{{ book.cover_image_url.url }}" alt="{{ book.title }}">
                     {% else %}
-                      <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
+                      <img src="{% static 'assets/pics/44014ddd859a3d1efa1d9e22abd33c36.jpg' %}" alt="No image">
                     {% endif %}
                     <h4>{{ book.title }}</h4>
                     <p>{{ book.author.all|join:", " }}</p>
@@ -71,7 +71,7 @@
                 {% if book_like.book.cover_image_url %}
                   <img src="{{ book_like.book.cover_image_url.url }}" alt="{{ book_like.book.title }}">
                 {% else %}
-                  <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
+                  <img src="{% static 'assets/pics/44014ddd859a3d1efa1d9e22abd33c36.jpg' %}" alt="No image">
                 {% endif %}
                 <h4>{{ book_like.book.title }}</h4>
                 <p>{{ book_like.book.author.all|join:", " }}</p>

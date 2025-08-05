@@ -46,10 +46,10 @@
           <div class="books-grid">
             {% for book in books %}
               <div class="book-card">
-                {% if book_pk.cover_image_url %}
-                  <img src="{{ book_pk.cover_image_url.url }}" alt="{{ book_pk.title }}">
+                {% if book.cover_image_url %}
+                  <img src="{{ book.cover_image_url.url }}" alt="{{ book.title }}">
                 {% else %}
-                  <img src="{% static 'assets/pics/373233_24241285.jpg' %}" alt="No image">
+                  <img src="{% static 'assets/pics/44014ddd859a3d1efa1d9e22abd33c36.jpg' %}" alt="No image">
                 {% endif %}
                 <h3>{{ book.title }}</h3>
                 <p>{{ book.author.all|join:", " }}</p>
