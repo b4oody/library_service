@@ -11,6 +11,17 @@ class RegistrationForm(UserCreationForm):
 
 
 class BookFilterForm(forms.Form):
+
+    ORDER_BY_YEAR_CHOICES = [
+        ('publication_year', 'За роком видання (старіші)'),
+        ('-publication_year', 'За роком видання (новіші)'),
+    ]
+
+    ORDER_BY_TITLE_CHOICES = [
+        ('title', 'За назвою (А-Я)'),
+        ('-title', 'За назвою (Я-А)'),
+    ]
+
     genre = forms.ModelChoiceField(
         queryset=Genre.objects.all(),
         required=False,
@@ -26,4 +37,44 @@ class BookFilterForm(forms.Form):
             attrs={"placeholder": "Search"}
         )
     )
+    not_in_stock = forms.BooleanField(
+        required=False,
+        label="Out of stock",
+    )
+    in_stock = forms.BooleanField(
+        required=False,
+        label="In stock"
+    )
 
+    price_min = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(attrs={'placeholder': 'Min. price'})
+    )
+    price_max = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(attrs={'placeholder': 'Max. price'})
+    )
+
+    order_by_year = forms.ChoiceField(
+        choices=ORDER_BY_YEAR_CHOICES,
+        required=False,
+        label="Сортувати за роком",
+        initial='-publication_year'
+    )
+
+    order_by_title = forms.ChoiceField(
+        choices=ORDER_BY_TITLE_CHOICES,
+        required=False,
+        label="Сортувати за назвою",
+        initial='title'
+    )
+
+    def clean_price_min(self):
+        price_min = self.cleaned_data.get("price_min")
+        price_max = self.cleaned_data.get("price_max")
+
+        if price_min is not None and price_max is not None and price_min > price_max:
+            raise forms.ValidationError(
+                "Мінімальна ціна не може бути більшою за максимальну."
+            )
+        return price_min

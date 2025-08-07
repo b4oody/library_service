@@ -55,6 +55,12 @@ def catalog_page_view(request: HttpRequest) -> HttpResponse:
         genre = form_filter.cleaned_data["genre"]
         author = form_filter.cleaned_data["author"]
         query = form_filter.cleaned_data["query"]
+        not_in_stock = form_filter.cleaned_data.get('not_in_stock')
+        in_stock = form_filter.cleaned_data.get('in_stock')
+        price_min = form_filter.cleaned_data.get('price_min')
+        price_max = form_filter.cleaned_data.get('price_max')
+        order_by_year = form_filter.cleaned_data.get('order_by_year')
+        order_by_title = form_filter.cleaned_data.get('order_by_title')
 
         if genre:
             books = books.filter(genres=genre)
@@ -66,10 +72,51 @@ def catalog_page_view(request: HttpRequest) -> HttpResponse:
             books = books.filter(
                 Q(title__icontains=query)
             )
+        if in_stock:
+            books = books.filter(quantity__gt=0)
+
+        if not_in_stock:
+            books = books.filter(quantity=0)
+
+        if price_min:
+            books = books.filter(price__gte=price_min)
+
+        if price_max:
+            books = books.filter(price__lte=price_max)
+
+        if order_by_title:
+            books = books.order_by(order_by_title)
+
+        if order_by_year:
+            books = books.order_by(order_by_year)
+
+    per_page_param = request.GET.get('per_page', 20)
+    try:
+        per_page = int(per_page_param)
+        if per_page > 100:
+            per_page = 100
+        if per_page <= 0:
+            per_page = 20
+
+    except (ValueError, TypeError):
+        per_page = 20
+
+    paginator = Paginator(books, per_page)
+    page_number = request.GET.get('page')
+
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.get_page(1)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
+
 
     context = {
-        "books": books,
-        "form_filter": form_filter
+        "books": page_obj,
+        "page_obj": page_obj,
+        "form_filter": form_filter,
+        'selected_per_page': per_page,
     }
     return render(
         request,
