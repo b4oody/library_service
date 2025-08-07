@@ -3,6 +3,7 @@ import uuid
 
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.db import models
 
 from config import settings
@@ -57,7 +58,14 @@ def validate_photo_size(value):
         raise ValidationError("Файл занадто великий. Максимальний розмір — 1 MB.")
 
 class Book(models.Model):
-    title = models.CharField(max_length=100)
+    title_validator = RegexValidator(
+        regex=r"^[a-zA-Zа-яА-ЯёЁ0-9']+$",
+        message="Поле може містити лише букви, цифри"
+    )
+
+    title = models.CharField(
+        max_length=100,
+        validators=[title_validator],)
     author = models.ManyToManyField(
         Author,
         related_name="books"
