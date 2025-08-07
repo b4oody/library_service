@@ -14,7 +14,7 @@
       <div class="catalog-layout">
         <aside class="filters">
           <h3>Filters</h3>
-          <form method="get" action="#">
+          <form method="get" action="{% url 'library:catalog_filter_view' %}">
             <div class="filter-group">
               {{ form_filter }}
             </div>
@@ -51,8 +51,12 @@
                 {% else %}
                   <img src="{% static 'assets/pics/44014ddd859a3d1efa1d9e22abd33c36.jpg' %}" alt="No image">
                 {% endif %}
-                <h3>{{ book.title }}</h3>
+                <h3 style="word-break: break-all;">{{ book.title|wordwrap:15 }}</h3>
+                <h3>{{ book.price }}</h3>
+                <h3>{{ book.quantity }}</h3>
+                <h3>{{ book.publication_year }}</h3>
                 <p>{{ book.author.all|join:", " }}</p>
+                <p style="word-break: break-all;">{{ book.description|truncatechars:200 }}</p>
                 <a href="{% url 'library:book_page_view' book.pk %}" class="btn-secondary">Details</a>
                 {% if user.is_authenticated and user.is_superuser %}
                   <br>
@@ -73,6 +77,9 @@
           </div>
         </div>
       </div>
+      {% block pagination %}
+        {% include "includes/pagination/pagination.html" %}
+      {% endblock %}
     </div>
   </main>
 {% endblock %}

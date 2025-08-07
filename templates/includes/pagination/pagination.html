@@ -1,0 +1,43 @@
+{% block pagination %}
+  <div class="pagination-container">
+    <form action="" method="get" class="per-page-form">
+      <label for="per-page">Книг на сторінці:</label>
+      <input type="number"
+             name="per_page"
+             id="per-page"
+             value="{{ selected_per_page }}"
+             min="1"
+             max="100">
+      <input type="hidden" name="page" value="{{ page_obj.number }}">
+      <button type="submit">ОК</button>
+    </form>
+
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page=1&per_page={{ selected_per_page }}">Перша</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}&per_page={{ selected_per_page }}">
+            &laquo;
+          </a>
+        </li>
+      {% endif %}
+
+      <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}&per_page={{ selected_per_page }}">
+            &raquo;
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&per_page={{ selected_per_page }}">
+            Остання
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+{% endblock %}

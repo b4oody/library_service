@@ -13,7 +13,7 @@
           {% endif %}
         </div>
         <div class="book-info">
-          <h1>{{ book_pk.title }}
+          <h1 style="word-break: break-all;">{{ book_pk.title }}
             {% if is_liked_book_by_user %}
               &#10084
             {% endif %}
@@ -31,7 +31,8 @@
           </div>
 
           <h4>Анотація</h4>
-          <p>{{ book_pk.description }}</p>
+          <p style="word-break: break-all;">{{ book_pk.description }}</p>
+
           <div style="display: flex; align-items: center; width: 250px; justify-content: space-between;">
             {% if user.is_authenticated and user.is_superuser %}
               <br>
