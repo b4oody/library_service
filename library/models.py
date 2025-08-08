@@ -110,6 +110,7 @@ class Purchase(models.Model):
     total_amount = models.DecimalField(
         max_digits=8,
         decimal_places=2,
+        null=True
     )
     payment_status = models.CharField(
         max_length=20,
@@ -121,7 +122,8 @@ class Purchase(models.Model):
         ordering = ["-purchase_date"]
 
     def __str__(self):
-        return f"Purchase {self.book.title} by {self.user}"
+        books = [book.title for book in self.books.all()]
+        return f"Purchase {", ".join(books)} by {self.user}"
 
 
 class LikedBook(models.Model):
@@ -143,3 +145,13 @@ class LikedBook(models.Model):
 
     def __str__(self):
         return f"{self.user} liked {self.book.title}"
+
+
+class PurchaseItem(models.Model):
+    purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def get_total_price(self):
+        return self.quantity * self.price

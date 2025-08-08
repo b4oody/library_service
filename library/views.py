@@ -204,20 +204,42 @@ def delete_liked_book_view(request: HttpRequest, pk: int) -> HttpResponse:
     return redirect("library:book_page_view", pk=pk)
 
 
-class PurchaseCreateView(LoginRequiredMixin, CreateAdminView):
+class PurchaseCreateView(LoginRequiredMixin, generic.CreateView):
     model = Purchase
-    fields = ["first_name", "last_name", "email", "books"]
+    form_class = PurchaseForm
     template_name = "catalog/create_purchase_form.html"
+    success_url = reverse_lazy("library:catalog_page_view")
 
     def form_valid(self, form):
+        books = form.cleaned_data["books"]
         instance = form.save(commit=False)
-
-        book = form.cleaned_data["books"]
         total_amount = 0
-        for book in book:
+        for book in books:
             total_amount += book.price
-
         instance.user = self.request.user
         instance.total_amount = total_amount
         instance.save()
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["create_update_form"] = context.pop("form")
+        return context
+
+
+class AddToCartView(LoginRequiredMixin, View):
+    def post(self, request, book_id):
+        book = get_object_or_404(Book, id=book_id)
+        cart, created = Purchase.objects.get_or_create(
+            user=request.user,
+        )
+        cart_item, item_created = PurchaseItem.objects.get_or_create(
+            purchase=cart,
+            book=book,
+            defaults={"price": book.price}
+        )
+
+        if not item_created:
+            cart_item.quantity += 1
+            cart_item.save()
+        return redirect(request.META.get("HTTP_REFERER", "library:catalog_page_view"))
