@@ -13,13 +13,18 @@ class RegistrationForm(UserCreationForm):
 class BookFilterForm(forms.Form):
 
     ORDER_BY_YEAR_CHOICES = [
-        ('publication_year', 'За роком видання (старіші)'),
-        ('-publication_year', 'За роком видання (новіші)'),
+        ("publication_year", "За роком видання (старіші)"),
+        ("-publication_year", "За роком видання (новіші)"),
     ]
 
     ORDER_BY_TITLE_CHOICES = [
-        ('title', 'За назвою (А-Я)'),
-        ('-title', 'За назвою (Я-А)'),
+        ("title", "За назвою (А-Я)"),
+        ("-title", "За назвою (Я-А)"),
+    ]
+
+    ORDER_BY_PRICE_CHOICES = [
+        ("price", "За ціною від дешевшої"),
+        ("-price", "За ціною від дорожчої"),
     ]
 
     genre = forms.ModelChoiceField(
@@ -59,14 +64,21 @@ class BookFilterForm(forms.Form):
         choices=ORDER_BY_YEAR_CHOICES,
         required=False,
         label="Сортувати за роком",
-        initial='-publication_year'
+        initial="-publication_year",
     )
 
     order_by_title = forms.ChoiceField(
         choices=ORDER_BY_TITLE_CHOICES,
         required=False,
         label="Сортувати за назвою",
-        initial='title'
+        initial="title",
+    )
+
+    order_by_price = forms.ChoiceField(
+        choices=ORDER_BY_PRICE_CHOICES,
+        required=False,
+        label="Сортувати за ціною",
+        initial="price",
     )
 
     def clean_price_min(self):

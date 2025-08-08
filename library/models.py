@@ -59,27 +59,29 @@ def validate_photo_size(value):
 
 class Book(models.Model):
     title_validator = RegexValidator(
-        regex=r"^[a-zA-Zа-яА-ЯёЁ0-9']+$",
-        message="Поле може містити лише букви, цифри"
+        regex=r"^[a-zA-Zа-яА-ЯёЁ0-9']+$", message="Поле може містити лише букви, цифри"
     )
 
     title = models.CharField(
         max_length=100,
-        validators=[title_validator],)
-    author = models.ManyToManyField(
-        Author,
-        related_name="books"
+        validators=[title_validator],
     )
-    genres = models.ManyToManyField(Genre, related_name="books", )
+    author = models.ManyToManyField(Author, related_name="books")
+    genres = models.ManyToManyField(
+        Genre,
+        related_name="books",
+    )
     publication_year = models.DateField()
     description = models.TextField()
-    quantity = models.PositiveIntegerField(default=1, )
+    quantity = models.PositiveIntegerField(
+        default=1,
+    )
     price = models.DecimalField(max_digits=6, decimal_places=2)
     cover_image_url = models.ImageField(
         upload_to=upload_to_uuid,
         blank=True,
         null=True,
-        validators=[validate_photo_size]
+        validators=[validate_photo_size],
     )
 
     class Meta:
@@ -106,12 +108,10 @@ class Purchase(models.Model):
         Book,
         related_name="purchases",
     )
-    purchase_date = models.DateTimeField(auto_now_add=True, )
-    total_amount = models.DecimalField(
-        max_digits=8,
-        decimal_places=2,
-        null=True
+    purchase_date = models.DateTimeField(
+        auto_now_add=True,
     )
+    total_amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     payment_status = models.CharField(
         max_length=20,
         choices=PaymentReservation.choices,

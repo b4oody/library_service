@@ -52,77 +52,78 @@ def catalog_page_view(request: HttpRequest) -> HttpResponse:
     books = Book.objects.prefetch_related("author", "genres")
     form_filter = BookFilterForm(request.GET)
     if form_filter.is_valid():
-        genre = form_filter.cleaned_data["genre"]
-        author = form_filter.cleaned_data["author"]
-        query = form_filter.cleaned_data["query"]
-        not_in_stock = form_filter.cleaned_data.get('not_in_stock')
-        in_stock = form_filter.cleaned_data.get('in_stock')
-        price_min = form_filter.cleaned_data.get('price_min')
-        price_max = form_filter.cleaned_data.get('price_max')
-        order_by_year = form_filter.cleaned_data.get('order_by_year')
-        order_by_title = form_filter.cleaned_data.get('order_by_title')
+        books = apply_filters_and_sort(books, form_filter.cleaned_data)
 
-        if genre:
-            books = books.filter(genres=genre)
+    per_page = get_per_page(request)
+    paginator = Paginator(books, per_page)
+    page_obj = get_paginated_page(request, paginator)
 
-        if author:
-            books = books.filter(author=author)
+    context = {
+        "books": page_obj,
+        "page_obj": page_obj,
+        "form_filter": form_filter,
+        "selected_per_page": per_page,
+    }
+    return render(request, "catalog/catalog.html", context=context)
 
-        if query:
-            books = books.filter(
-                Q(title__icontains=query)
-            )
-        if in_stock:
-            books = books.filter(quantity__gt=0)
 
-        if not_in_stock:
-            books = books.filter(quantity=0)
+def apply_filters_and_sort(books, cleaned_data):
+    genre = cleaned_data.get("genre")
+    author = cleaned_data.get("author")
+    query = cleaned_data.get("query")
+    not_in_stock = cleaned_data.get("not_in_stock")
+    in_stock = cleaned_data.get("in_stock")
+    price_min = cleaned_data.get("price_min")
+    price_max = cleaned_data.get("price_max")
+    order_by_year = cleaned_data.get("order_by_year")
+    order_by_title = cleaned_data.get("order_by_title")
+    order_by_price = cleaned_data.get("order_by_price")
 
-        if price_min:
-            books = books.filter(price__gte=price_min)
+    if genre:
+        books = books.filter(genres=genre)
+    if author:
+        books = books.filter(author=author)
+    if query:
+        books = books.filter(Q(title__icontains=query))
+    if in_stock:
+        books = books.filter(quantity__gt=0)
+    if not_in_stock:
+        books = books.filter(quantity=0)
+    if price_min:
+        books = books.filter(price__gte=price_min)
+    if price_max:
+        books = books.filter(price__lte=price_max)
 
-        if price_max:
-            books = books.filter(price__lte=price_max)
+    if order_by_title:
+        books = books.order_by(order_by_title)
+    if order_by_year:
+        books = books.order_by(order_by_year)
+    if order_by_price:
+        books = books.order_by(order_by_price)
 
-        if order_by_title:
-            books = books.order_by(order_by_title)
+    return books
 
-        if order_by_year:
-            books = books.order_by(order_by_year)
 
-    per_page_param = request.GET.get('per_page', 20)
+def get_per_page(request):
+    per_page_param = request.GET.get("per_page", 20)
     try:
         per_page = int(per_page_param)
-        if per_page > 100:
-            per_page = 100
-        if per_page <= 0:
-            per_page = 20
-
+        if 0 < per_page <= 100:
+            return per_page
+        return 20
     except (ValueError, TypeError):
-        per_page = 20
+        return 20
 
-    paginator = Paginator(books, per_page)
-    page_number = request.GET.get('page')
 
+def get_paginated_page(request, paginator):
+    page_number = request.GET.get("page")
     try:
         page_obj = paginator.get_page(page_number)
     except PageNotAnInteger:
         page_obj = paginator.get_page(1)
     except EmptyPage:
         page_obj = paginator.get_page(paginator.num_pages)
-
-
-    context = {
-        "books": page_obj,
-        "page_obj": page_obj,
-        "form_filter": form_filter,
-        'selected_per_page': per_page,
-    }
-    return render(
-        request,
-        "catalog/catalog.html",
-        context=context
-    )
+    return page_obj
 
 
 def book_page_view(request: HttpRequest, pk: int) -> HttpResponse:
@@ -132,13 +133,9 @@ def book_page_view(request: HttpRequest, pk: int) -> HttpResponse:
 
     context = {
         "book_pk": Book.objects.get(pk=pk),
-        "is_liked_book_by_user": is_liked_book_by_user
+        "is_liked_book_by_user": is_liked_book_by_user,
     }
-    return render(
-        request,
-        "catalog/book-page.html",
-        context=context
-    )
+    return render(request, "catalog/book-page.html", context=context)
 
 
 class CreateAdminView(generic.CreateView):

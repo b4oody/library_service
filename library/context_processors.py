@@ -6,7 +6,9 @@ def cart_count(request):
     if request.user.is_authenticated:
         try:
             cart = Purchase.objects.get(user=request.user, payment_status="pending")
-            cart_items_count = sum(item.quantity for item in cart.purchaseitem_set.all())
+            cart_items_count = sum(
+                item.quantity for item in cart.purchaseitem_set.all()
+            )
         except Purchase.DoesNotExist:
             cart_items_count = 0
 
