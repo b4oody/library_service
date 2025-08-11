@@ -4,12 +4,25 @@
 {% block content %}
   <main>
     <div class="container">
+      {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li class="{{ message.tags }}">
+              {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
       <div class="book-details-layout">
         <div class="book-cover">
-          <img src="{{ book_pk.cover_image_url.url }}" alt="Обкладинка книги Дюна">
+          {% if book_pk.cover_image_url %}
+            <img src="{{ book_pk.cover_image_url.url }}" alt="{{ book_pk.title }}">
+          {% else %}
+            <img src="{% static 'assets/pics/44014ddd859a3d1efa1d9e22abd33c36.jpg' %}" alt="No image">
+          {% endif %}
         </div>
         <div class="book-info">
-          <h1>{{ book_pk.title }}
+          <h1 style="word-break: break-all;">{{ book_pk.title }}
             {% if is_liked_book_by_user %}
               &#10084
             {% endif %}
@@ -27,7 +40,8 @@
           </div>
 
           <h4>Анотація</h4>
-          <p>{{ book_pk.description }}</p>
+          <p style="word-break: break-all;">{{ book_pk.description }}</p>
+
           <div style="display: flex; align-items: center; width: 250px; justify-content: space-between;">
             {% if user.is_authenticated and user.is_superuser %}
               <br>
@@ -45,7 +59,11 @@
             {% endif %}
           </div>
           <div class="book-actions">
-            <a href="{% url 'library:purchase_create_view' %}" class="btn">Купити книгу</a>
+            <form method="post" action="{% url 'library:add_to_cart_item' book_pk.pk %}">
+              {% csrf_token %}
+
+              <button type="submit" class="btn-secondary">Добавити книгу до корзини</button>
+            </form>
             <form action="{% url 'library:add_liked_book' book_pk.pk %}" method="post">
               {% csrf_token %}
               {% if not is_liked_book_by_user %}

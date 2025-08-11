@@ -7,6 +7,7 @@ from library.models import (
     Book,
     Purchase,
     LikedBook,
+    PurchaseItem,
 
 )
 
@@ -16,3 +17,4 @@ admin.site.register(Genre)
 admin.site.register(Book)
 admin.site.register(Purchase)
 admin.site.register(LikedBook)
+admin.site.register(PurchaseItem)

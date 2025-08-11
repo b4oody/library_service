@@ -19,6 +19,14 @@
           </div>
         {% else %}
           <div class="user-actions">
+            <a href="{% url 'library:checkout_page_view' %}">
+              Кошик 🛒
+              {% if cart_items_count > 0 %}
+                <span>({{ cart_items_count }})</span>
+              {% else %}
+                <span>0</span>
+              {% endif %}
+            </a>
             <a href="{% url 'library:profile' %}" class="btn-secondary">Profile: {{ user.username }}</a>
             <form action="{% url 'library:logout' %}" method="post">
               {% csrf_token %}

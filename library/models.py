@@ -2,6 +2,8 @@ import os
 import uuid
 
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.db import models
 
 from config import settings
@@ -19,8 +21,8 @@ class User(AbstractUser):
 
 
 class Author(models.Model):
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
 
     class Meta:
         ordering = ["last_name", "first_name"]
@@ -34,7 +36,7 @@ class Author(models.Model):
 
 
 class Genre(models.Model):
-    genre_name = models.CharField(max_length=100, unique=True)
+    genre_name = models.CharField(max_length=50, unique=True)
 
     class Meta:
         ordering = ["genre_name"]
@@ -44,28 +46,42 @@ class Genre(models.Model):
 
 
 def upload_to_uuid(instance, filename):
-    ext = filename.split('.')[-1]
+    ext = filename.split(".")[-1]
     filename = f"{uuid.uuid4()}.{ext}"
     folder = "photos/"
 
     return os.path.join(folder, filename)
 
+def validate_photo_size(value):
+    MAX_UPLOAD_SIZE = 1 * 1024 * 1024
+    if value.size > MAX_UPLOAD_SIZE:
+        raise ValidationError("Файл занадто великий. Максимальний розмір — 1 MB.")
 
 class Book(models.Model):
-    title = models.CharField(max_length=255)
-    author = models.ManyToManyField(
-        Author,
-        related_name="books"
+    title_validator = RegexValidator(
+        regex=r"^[a-zA-Zа-яА-ЯёЁ0-9']+$", message="Поле може містити лише букви, цифри"
     )
-    genres = models.ManyToManyField(Genre, related_name="books", )
+
+    title = models.CharField(
+        max_length=100,
+        validators=[title_validator],
+    )
+    author = models.ManyToManyField(Author, related_name="books")
+    genres = models.ManyToManyField(
+        Genre,
+        related_name="books",
+    )
     publication_year = models.DateField()
     description = models.TextField()
-    quantity = models.PositiveIntegerField(default=1, )
+    quantity = models.PositiveIntegerField(
+        default=1,
+    )
     price = models.DecimalField(max_digits=6, decimal_places=2)
     cover_image_url = models.ImageField(
         upload_to=upload_to_uuid,
         blank=True,
-        null=True
+        null=True,
+        validators=[validate_photo_size],
     )
 
     class Meta:
@@ -80,8 +96,8 @@ class Book(models.Model):
 
 
 class Purchase(models.Model):
-    first_name = models.CharField(max_length=200, blank=True)
-    last_name = models.CharField(max_length=200, blank=True)
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
     email = models.EmailField(blank=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -92,10 +108,14 @@ class Purchase(models.Model):
         Book,
         related_name="purchases",
     )
-    purchase_date = models.DateTimeField(auto_now_add=True, )
+    purchase_date = models.DateTimeField(
+        auto_now_add=True,
+    )
     total_amount = models.DecimalField(
         max_digits=8,
         decimal_places=2,
+        null=True,
+        default=0,
     )
     payment_status = models.CharField(
         max_length=20,
@@ -107,7 +127,8 @@ class Purchase(models.Model):
         ordering = ["-purchase_date"]
 
     def __str__(self):
-        return f"Purchase {self.book.title} by {self.user}"
+        books = [book.title for book in self.books.all()]
+        return f"Purchase {", ".join(books)} by {self.user}"
 
 
 class LikedBook(models.Model):
@@ -129,3 +150,16 @@ class LikedBook(models.Model):
 
     def __str__(self):
         return f"{self.user} liked {self.book.title}"
+
+
+class PurchaseItem(models.Model):
+    purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.purchase} {self.book} {self.quantity} {self.price}"
+
+    def get_total_price(self):
+        return self.quantity * self.price
