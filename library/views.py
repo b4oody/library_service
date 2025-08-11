@@ -245,6 +245,7 @@ class AddToCartView(LoginRequiredMixin, View):
         )
         cart.total_amount = total_amount
         cart.save()
+        messages.success(request, "Успішно добавлено книгу")
         return redirect(request.META.get("HTTP_REFERER", "library:catalog_page_view"))
 
 
@@ -370,6 +371,7 @@ class CheckoutView(LoginRequiredMixin, UpdateView):
             with transaction.atomic():
                 order = form.save(commit=False)
                 order.payment_status = "completed"
+
                 order.save()
 
                 for item in cart_items:
@@ -378,6 +380,7 @@ class CheckoutView(LoginRequiredMixin, UpdateView):
                     if item.quantity > book_to_update.quantity:
                         raise Exception(f"Недостатньо «{book_to_update.title}» на складі.")
                     book_to_update.quantity -= item.quantity
+                    order.books.add(book_to_update)
                     book_to_update.save()
 
         except Exception as e:
