@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from library.models import User, Genre, Author
+from library.models import User, Genre, Author, Purchase
 
 
 class RegistrationForm(UserCreationForm):
@@ -31,33 +31,23 @@ class BookFilterForm(forms.Form):
         queryset=Genre.objects.all(),
         required=False,
     )
-    author = forms.ModelChoiceField(
-        queryset=Author.objects.all(),
-        required=False
-    )
+    author = forms.ModelChoiceField(queryset=Author.objects.all(), required=False)
     query = forms.CharField(
         required=False,
         label="Search",
-        widget=forms.TextInput(
-            attrs={"placeholder": "Search"}
-        )
+        widget=forms.TextInput(attrs={"placeholder": "Search"}),
     )
     not_in_stock = forms.BooleanField(
         required=False,
         label="Out of stock",
     )
-    in_stock = forms.BooleanField(
-        required=False,
-        label="In stock"
-    )
+    in_stock = forms.BooleanField(required=False, label="In stock")
 
     price_min = forms.IntegerField(
-        required=False,
-        widget=forms.NumberInput(attrs={'placeholder': 'Min. price'})
+        required=False, widget=forms.NumberInput(attrs={"placeholder": "Min. price"})
     )
     price_max = forms.IntegerField(
-        required=False,
-        widget=forms.NumberInput(attrs={'placeholder': 'Max. price'})
+        required=False, widget=forms.NumberInput(attrs={"placeholder": "Max. price"})
     )
 
     order_by_year = forms.ChoiceField(
@@ -90,3 +80,27 @@ class BookFilterForm(forms.Form):
                 "Мінімальна ціна не може бути більшою за максимальну."
             )
         return price_min
+
+    def clean(self):
+        cleaned_data = super().clean()
+        price_min = cleaned_data.get("price_min")
+        price_max = cleaned_data.get("price_max")
+
+        if price_min is not None and price_min < 0:
+            raise forms.ValidationError("Мінімальна ціна не може бути від'ємною.")
+
+        if price_max is not None and price_max < 0:
+            raise forms.ValidationError("Мінімальна ціна не може бути від'ємною.")
+
+        if price_min is not None and price_max is not None and price_min > price_max:
+            raise forms.ValidationError(
+                "Мінімальна ціна не може бути більшою за максимальну."
+            )
+        return cleaned_data
+
+
+class PurchaseForm(forms.ModelForm):
+    class Meta:
+        model = Purchase
+        fields = ["first_name", "last_name", "email"]
+
