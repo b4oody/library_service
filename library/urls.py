@@ -15,6 +15,11 @@ from library.views import (
     delete_liked_book_view,
     PurchaseCreateView,
     AddToCartView,
+    checkout_page_view,
+    delete_book_from_order,
+    update_cart,
+    CheckoutFormView,
+    CheckoutView,
 )
 
 urlpatterns = [
@@ -33,6 +38,10 @@ urlpatterns = [
     path("delete_liked_book/<int:pk>/", delete_liked_book_view, name="delete_liked_book_view"),
     path("create_purchase/", PurchaseCreateView.as_view(), name="purchase_create_view"),
     path("add_to_cart_item/<int:book_id>/", AddToCartView.as_view(), name="add_to_cart_item"),
+    path("checkout_page_view/", CheckoutView.as_view(), name="checkout_page_view"),
+    path("delete_book_from_order/<int:book_id>/", delete_book_from_order, name='delete_book_from_order'),
+    path("update_cart/", update_cart, name='update_cart'),
+    path("order_form/", CheckoutFormView.as_view(), name='order_form'),
 
 ]
 

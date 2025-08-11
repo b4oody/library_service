@@ -19,7 +19,7 @@
           </div>
         {% else %}
           <div class="user-actions">
-            <a href="#">
+            <a href="{% url 'library:checkout_page_view' %}">
               Кошик 🛒
               {% if cart_items_count > 0 %}
                 <span>({{ cart_items_count }})</span>

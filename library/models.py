@@ -46,7 +46,7 @@ class Genre(models.Model):
 
 
 def upload_to_uuid(instance, filename):
-    ext = filename.split('.')[-1]
+    ext = filename.split(".")[-1]
     filename = f"{uuid.uuid4()}.{ext}"
     folder = "photos/"
 
@@ -111,7 +111,12 @@ class Purchase(models.Model):
     purchase_date = models.DateTimeField(
         auto_now_add=True,
     )
-    total_amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    total_amount = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        default=0,
+    )
     payment_status = models.CharField(
         max_length=20,
         choices=PaymentReservation.choices,
@@ -152,6 +157,9 @@ class PurchaseItem(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.purchase} {self.book} {self.quantity} {self.price}"
 
     def get_total_price(self):
         return self.quantity * self.price
